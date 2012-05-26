@@ -83,7 +83,25 @@ class TextHUD(pygame.sprite.Sprite):
         if self.distance >= 20:
             self.kill()
         
-class  Coordinador(Oyente):
-    pass
+class  Protocolo(Oyente):
+    ticks = 0
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.rect=Rect(88,0,96,96)
+        self.original= load_image("protocolo.png")
+        self.image = self.original
+        self.direction = 1
+    
+    def renderState(self):
+        self.image = self.original.copy()
         
+    def takazo(self,game):
+        game.puntos-=PENALIZACION
+        
+    def update(self,game):
+        self.rect.y += self.direction
+        
+        if self.rect.y > 480-self.rect.height-1:
+            self.direction *= -1
+     
         

@@ -64,6 +64,7 @@ class Game():
         self.arrow = load_image("arrow.png")
         self.player = Player()
         self.group = Group()
+        self.protocolo = Protocolo()
         self.group.add(self.player)
         
         self.groupOyentes = Group()
@@ -146,6 +147,7 @@ class Game():
         #input
         
         self.player.update(self)
+        self.protocolo.update(self)
         
         for oyente in self.groupOyentes:
             oyente.update(self)
@@ -158,6 +160,7 @@ class Game():
         #render
         self.screen.blit(self.background,(0,0))
         
+        self.screen.blit(self.protocolo.image, self.protocolo.rect)
         self.groupOyentes.draw(self.screen)
         self.groupTakitos.draw(self.screen)
         self.group.draw(self.screen)
@@ -188,6 +191,7 @@ class Game():
         	else:
         		self.state= GAME_END
         		
+
     def end(self):
         self.screen.blit(self.gameover, (0,0))
     
@@ -197,7 +201,7 @@ class Game():
         if self.state <= GAME_PAUSE:
             self.pause()   
         elif self.state <= GAME_INIT:
-            self.init() 
+            self.init()
         elif self.state <= GAME_WAIT:
             self.wait()   
         elif self.state <= GAME_LOOP:
