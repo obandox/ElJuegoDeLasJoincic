@@ -104,6 +104,7 @@ class Game():
                         break
              
         self.time_next_level=time.time()+ 60
+        self.puntos=0
         
     def loop(self):
         #input
@@ -133,7 +134,8 @@ class Game():
         
         delta_time=self.time_next_level - time.time()
         self.screen.blit( self.font.render("Faltan: %d : %d " % ( (delta_time/60) , delta_time % 60),True, self.fontColor ) , (15,15) )    
-        self.screen.blit( self.font.render(" Nivel: %d  " % self.level ,True, self.fontColor ) , (565,15) )    
+        self.screen.blit( self.font.render(" Nivel: %d  " % self.level ,True, self.fontColor ) , (565,15) )      
+        self.screen.blit( self.font.render(" Puntos: %d  " % self.puntos ,True, self.fontColor ) , (365,15) )    
        
         if delta_time <= 0:
             print "game over"

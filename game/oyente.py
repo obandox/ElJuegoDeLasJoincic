@@ -22,6 +22,8 @@ ESTADOS_NOMBRE= {
 
 MAX_TICK= 60 
 
+PENALIZACION= 100
+
 class Oyente(pygame.sprite.Sprite):
     
     state = OYENTE_DESPIERTO
@@ -41,6 +43,12 @@ class Oyente(pygame.sprite.Sprite):
         if self.state != OYENTE_NORMAL:
             self.image.blit(load_image("state_%s.png" %  ESTADOS_NOMBRE[self.state]  ), (0,0))
         
+    def takazo(self,game):
+        if self.state <= OYENTE_NORMAL:
+            game.puntos-=PENALIZACION
+        else:
+            self.state-= OYENTE_DESPIERTO
+        
     def update(self,game):
         self.ticks+=1
         if MAX_TICK <= self.ticks:
@@ -48,7 +56,7 @@ class Oyente(pygame.sprite.Sprite):
             if self.state != self.last_state:
                 self.renderState()
                 self.last_state=self.state
-            if randrange(6) == 1 :
+            if randrange(3) == 1 :
                 self.state+=OYENTE_DESPIERTO
                 self.state= clamp(self.state , OYENTE_DESPIERTO, OYENTE_DORMIDO  )
 
