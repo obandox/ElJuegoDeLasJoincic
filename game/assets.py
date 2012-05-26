@@ -1,6 +1,8 @@
 
 import os
 import pygame
+from pygame import RLEACCEL
+
 
 FOLDER = "assets"
 

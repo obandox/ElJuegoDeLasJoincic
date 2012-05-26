@@ -7,6 +7,8 @@ class Mouse:
         self.is_button_up=False
         self.is_button_down=False
         self.is_motion=False
+        self.rel_position=(0,0)
+        self.last_position=(0,0)
         self.button_map={
 
          "CLICK":1,
@@ -50,7 +52,8 @@ class Mouse:
         elif event.type == MOUSEMOTION:
                 self.is_motion = True
                 self.position=event.pos
-
+        self.rel_position=(self.last_position[0]-self.position[0], self.last_position[1]-self.position[1])
+        self.last_position=self.position
                          
 
     def is_pressed(self,button):

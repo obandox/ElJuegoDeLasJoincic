@@ -2,6 +2,7 @@ from pygame.locals import *
 from mouse import *
 from keyboard import *
 import sys
+import pygame
 
 #se encarga de mantener actualizado las clases que controlan el raton y el teclado.. parte de contenerlas en si mismo
 class Controller:
@@ -19,7 +20,7 @@ class Controller:
                 self.toggle_fullscreen()
             self.keyboard.update(event)
             self.mouse.update(event)
-            
+            pygame.mouse.set_visible(False)
             
     def toggle_fullscreen(self):
         screen = pygame.display.get_surface()
