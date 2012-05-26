@@ -1,3 +1,5 @@
+import pygame
+pygame.init()
 from pygame.locals import *
 from controller import Controller
 from assets import load_image
@@ -11,9 +13,7 @@ from player import *
 from oyente import *
 from util import *
 import time
-import pygame
 from pygame.sprite import Group
-
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
@@ -62,6 +62,7 @@ class Game():
         self.group.add(self.player)
         self.groupOyentes = Group()
         self.groupTakitos = Group()
+        self.groupHUD = Group()
         
         self.oyentes=[
                       [0,0,0,0,0],
@@ -89,12 +90,20 @@ class Game():
     
     def initLevel(self):
         count= (self.level - 1 )*2 + 4
+        self.oyentes=[
+                      [0,0,0,0,0],
+                      [0,0,0,0,0],
+                      [0,0,0,0,0],
+                      [0,0,0,0,0],
+                      [0,0,0,0,0],
+                     ]
         self.groupOyentes.empty()
         self.groupTakitos.empty()
         for i in range(count):            
             if self.hayPuesto():
                 oyente=Oyente()
                 self.groupOyentes.add(oyente)
+                oyente.onScoreTick = self.comprobarScore
                 while True:
                     i = randrange(5)
                     j = randrange(5)
@@ -105,6 +114,14 @@ class Game():
              
         self.time_next_level=time.time()+ 60
         self.puntos=0
+    
+    def comprobarScore(self, oyente):
+        if oyente.state == OYENTE_DESPIERTO or \
+           oyente.state == OYENTE_DISTRAIDO or \
+           oyente.state == OYENTE_ABURRIDO:
+            self.groupHUD.add(TextHUD(oyente.rect, "+1"))
+        if oyente.state == OYENTE_DORMIDO:
+            self.groupHUD.add(TextHUD(oyente.rect, "-1"))
         
     def loop(self):
         #input
@@ -117,12 +134,15 @@ class Game():
         for takito in self.groupTakitos:
             takito.update(self)
         
+        self.groupHUD.update()
+        
         #render
         self.screen.blit(self.background,(0,0))
         
         self.groupOyentes.draw(self.screen)
         self.groupTakitos.draw(self.screen)
         self.group.draw(self.screen)
+        self.groupHUD.draw(self.screen)
         
         if self.player.state == PLAYER_AIM:
             image= pygame.transform.scale(self.arrow, ( self.arrow.get_width()+ int( MAX_DISTAN_FORCE*self.player.force) ,self.arrow.get_height() ))
@@ -138,14 +158,17 @@ class Game():
         self.screen.blit( self.font.render(" Puntos: %d  " % self.puntos ,True, self.fontColor ) , (365,15) )    
        
         if delta_time <= 0:
-            pass
-            
-    def count(self):
-        return len(self.groupOyentes)
-    
-    def countDespiertos(self):
-        pass
-        
+        	count= len(self.groupOyentes)
+        	count_len=0
+        	for sprite in groupOyentes:
+        		if sprite.state <= OYENTE_NORMAL:
+        			count_len+=1
+        	if count_len >= count /2:
+        		self.level+=1
+        		self.initLevel()
+        	else:
+        		self.state= GAME_END
+        		
     def end(self):
         pass
     
@@ -161,10 +184,11 @@ class Game():
             self.loop()   
         elif self.state <= GAME_END:
             self.end()   
-        self.screen.blit(self.cursor, self.controller.m.position)
+        if self.player.state != PLAYER_AIM:
+        	self.screen.blit(self.cursor, self.controller.m.position)
 
     def go(self):
-        while not self._quit:   
-            self.update()        
+        while not self._quit:
+            self.update()
             pygame.display.flip()
             self.clock.tick(TICKPERSEC)
