@@ -3,7 +3,6 @@ from mouse import *
 from keyboard import *
 import sys
 
-CAM=True
 #se encarga de mantener actualizado las clases que controlan el raton y el teclado.. parte de contenerlas en si mismo
 class Controller:
     def __init__(self):

@@ -1,12 +1,14 @@
 from pygame.locals import *
-from controller import *
-from assets import *
+from controller import Controller
+from assets import load_image
+
 from pygame import Rect
 import os
 import pickle
 import threading  
 from random import randrange
 import time
+import pygame
 
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
@@ -45,7 +47,9 @@ class Game():
         self.clock = pygame.time.Clock()
         self.controller= Controller()
         self.state = GAME_LOOP
-
+        self.background = load_image("background.png");
+        
+        
         
     def pause(self):
         pass
@@ -56,7 +60,8 @@ class Game():
     
     
     def loop(self):
-        pass
+        self.screen.blit(self.background,(0,0));
+        
             
     def end(self):
         pass
