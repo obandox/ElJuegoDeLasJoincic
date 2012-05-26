@@ -138,7 +138,13 @@ class Game():
         self.screen.blit( self.font.render(" Puntos: %d  " % self.puntos ,True, self.fontColor ) , (365,15) )    
        
         if delta_time <= 0:
-            print "game over"
+            pass
+            
+    def count(self):
+        return len(self.groupOyentes)
+    
+    def countDespiertos(self):
+        pass
         
     def end(self):
         pass
