@@ -12,6 +12,7 @@ from random import randrange
 from player import *
 from oyente import *
 from util import *
+import sys
 import time
 from pygame.sprite import Group
 
@@ -53,26 +54,22 @@ class Game():
         self._quit=False
         self.clock = pygame.time.Clock()
         self.controller= Controller()
-        self.state = GAME_LOOP
         self.background = load_image("background.png")
+        self.menu_background = load_image("menu_background.png")
+        self.menu_iniciar = load_image("menu_iniciar.png")
+        self.menu_salir = load_image("menu_salir.png")
+        
+        self.gameover = load_image("gameover.png")
         self.cursor = load_image("cursor.png")
         self.arrow = load_image("arrow.png")
         self.player = Player()
         self.group = Group()
         self.group.add(self.player)
+        
         self.groupOyentes = Group()
         self.groupTakitos = Group()
         self.groupHUD = Group()
-        
-        self.oyentes=[
-                      [0,0,0,0,0],
-                      [0,0,0,0,0],
-                      [0,0,0,0,0],
-                      [0,0,0,0,0],
-                      [0,0,0,0,0],
-                     ]
-        self.level=1
-        self.initLevel();
+        self.state= GAME_INIT
         
     def pause(self):
         pass
@@ -86,7 +83,29 @@ class Game():
                     return True
         return False
     def init(self):
-        pass
+        self.screen.blit(self.menu_background,(0,0))
+        rect = self.screen.blit(self.menu_iniciar,(200,200))
+        if rect.collidepoint(self.controller.mouse.position):    
+            self.screen.blit(self.menu_iniciar,(200,200))
+            if self.controller.mouse.click:
+                self.state = GAME_LOOP
+                self.oyentes=[
+                              [0,0,0,0,0],
+                              [0,0,0,0,0],
+                              [0,0,0,0,0],
+                              [0,0,0,0,0],
+                              [0,0,0,0,0],
+                             ]
+                self.level=1
+                self.initLevel();
+                
+        rect = self.screen.blit(self.menu_salir,(200,260))
+        if rect.collidepoint(self.controller.mouse.position):    
+            self.screen.blit(self.menu_salir,(200,260))
+            if self.controller.mouse.click:
+                sys.exit(0)
+            
+        
     
     def initLevel(self):
         count= (self.level - 1 )*2 + 4
@@ -108,8 +127,8 @@ class Game():
                     i = randrange(5)
                     j = randrange(5)
                     if self.oyentes[i][j]== 0:
-                        oyente.rect.x=240+(i*oyente.rect.w)
-                        oyente.rect.y=10+j*oyente.rect.h
+                        oyente.rect.x=160+(i*oyente.rect.w)
+                        oyente.rect.y=j*oyente.rect.h
                         break
              
         self.time_next_level=time.time()+ 60
@@ -160,7 +179,7 @@ class Game():
         if delta_time <= 0:
         	count= len(self.groupOyentes)
         	count_len=0
-        	for sprite in groupOyentes:
+        	for sprite in self.groupOyentes:
         		if sprite.state <= OYENTE_NORMAL:
         			count_len+=1
         	if count_len >= count /2:
@@ -170,14 +189,15 @@ class Game():
         		self.state= GAME_END
         		
     def end(self):
-        pass
+        self.screen.blit(self.gameover, (0,0))
     
     def update(self):
         self.controller.update()
+        self.screen = pygame.display.get_surface()
         if self.state <= GAME_PAUSE:
             self.pause()   
         elif self.state <= GAME_INIT:
-            self.init()()   
+            self.init() 
         elif self.state <= GAME_WAIT:
             self.wait()   
         elif self.state <= GAME_LOOP:

@@ -24,7 +24,7 @@ ESTADOS_NOMBRE= {
 MAX_TICK= 60
 TIMER_COMPROBACION = 60*3
 
-PENALIZACION= 100
+PENALIZACION= 4
 
 class Oyente(pygame.sprite.Sprite):
     
@@ -34,7 +34,7 @@ class Oyente(pygame.sprite.Sprite):
     ticks = 0
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.rect=Rect(0,0,80,96)
+        self.rect=Rect(0,0,96,96)
         self.original= load_image("oyente%d.png" % (1+randrange(5)) )
         self.image = self.original
         self.state= OYENTE_DESPIERTO
@@ -50,7 +50,7 @@ class Oyente(pygame.sprite.Sprite):
         if self.state <= OYENTE_NORMAL:
             game.puntos-=PENALIZACION
         else:
-            self.state-= OYENTE_DESPIERTO
+            self.state-= OYENTE_NORMAL
         
     def update(self,game):
         self.ticks+=1

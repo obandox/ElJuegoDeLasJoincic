@@ -30,6 +30,7 @@ class Takito(pygame.sprite.Sprite):
         if sprite is not None :
             try:
                 sprite.takazo(game)
+                self.kill()
             except:
                 pass
             

@@ -30,7 +30,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image= load_image("player.png")
-        self.rect=Rect(RECT_ESTRADO.w/2,RECT_ESTRADO.h-self.image.get_width(),self.image.get_width(),self.image.get_height())
+        self.rect=Rect(RECT_ESTRADO.w/2-self.image.get_width()/2,RECT_ESTRADO.h-self.image.get_width(),self.image.get_width(),self.image.get_height())
         self.arrow_angle=0
         self.force=0
     
